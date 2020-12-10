@@ -5,8 +5,8 @@
   <div class="content">
     <div class="form-input">
       <div class="input-container" style="padding-left:50px;">
-        <input class="input-field" style="font-size:40px;" type="text" v-model="search" @input="searchPokemon">
-        <i class="fa fa-search icon" style="color:#e44c4c;font-size:40px;"></i>
+        <input class="input-field" style="font-size:40px;" type="text" v-model="search" placeholder="Find Pokemon" @blur="searchPokemon">
+        <i class="fa fa-search icon" style="color:#e44c4c;font-size:40px;cursor:pointer;" @click="searchPokemon"></i>
       </div>
     </div>
     <div class="cards" 
@@ -104,6 +104,24 @@ export default {
     },
     async searchPokemon(){
 
+      this.masterList = await axios.get(`http://localhost:3030/api/cards?name=${this.search}`).then(resp => resp.data.cards.map(pokemon => {
+          return this.getStatus(pokemon)
+        }));
+
+        if(this.selectedList.length){
+          for(let i = 0; i < this.masterList.length; i++){
+            let mId = this.masterList[i].id
+            for(let j = 0; j < this.selectedList.length; j++){
+              let sId = this.selectedList[j].id
+              if(mId.trim().toUpperCase() === sId.trim().toUpperCase()){
+                this.masterList.splice(i, 1);
+                i = i-1
+                continue;
+              }
+            }
+          }
+        } 
+
       this.dataList = this.masterList
 
       if(this.search != ''){
@@ -112,7 +130,7 @@ export default {
 
         for(let i = 0; i < this.dataList.length; i++){
             let pokemon = this.dataList[i]
-            if(pokemon.name.trim().toUpperCase().indexOf(this.search.trim().toUpperCase()) > -1){
+            if(pokemon.name.toUpperCase().indexOf(this.search.toUpperCase()) > -1){
                 filterList.push(pokemon)
             }
         }
