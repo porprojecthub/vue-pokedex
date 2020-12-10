@@ -1,28 +1,60 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Pokedex />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Pokedex from './components/pokedex/Pokedex.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Pokedex
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
+  padding: 0;
+  /*font-family: sans-serif;*/
+  font-family: 'Atma', cursive;
 }
+
+#app {
+  width: 1024px;
+  height: 768px;
+  margin: 50px auto;
+  border-color: #353535;
+  border-radius: 40px;
+  border-width: 28px 103px 28px 74px;
+  border-style: solid;
+  position: relative;
+}
+
+#app:before {
+  content: "";
+  position: absolute;
+  left: -80px;
+  transform: rotate(270deg);
+  background: url(https://cdn-images-1.medium.com/fit/c/200/200/1*PKHCHuLxDyZ8SV3PKxzizA.png) no-repeat center center / 100%;
+  width: 85px;
+  height: 180px;
+  top: 40%;
+}
+
+#app:after {
+  content: "";
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  background: #5c5c5c;
+  position: absolute;
+  right: -79px;
+  top: 50%;
+  border: 1px inset #7b7b7b;
+}
+
 </style>
