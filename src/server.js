@@ -21,7 +21,7 @@ app.get('/api/cards', (req, res) => {
       const checkName = _.includes(_.toUpper(card.name), name)
       const checkType = _.includes(_.toUpper(card.type), type)
       return checkName && checkType
-    })
+    }).slice(0, limit)
   })
 
 })

@@ -5,7 +5,13 @@
   <div class="content">
     <div class="form-input">
       <div class="input-container" style="padding-left:50px;">
-        <input class="input-field" style="font-size:40px;" type="text" v-model="search" placeholder="Find Pokemon" @blur="searchPokemon">
+        <input class="input-field" style="font-size:20px;" type="text" v-model="criteria.name" placeholder="Pokemon Name"/>
+        <input class="input-field" style="font-size:20px;" type="text" v-model="criteria.type" placeholder="Pokemon Type"/>
+        <select class="input-field" v-model="criteria.limit" style="font-size:20px;">
+           <option value="20">Show 20</option>
+           <option value="50">Show 50</option>
+           <option value="100">Show 100</option>
+         </select>
         <i class="fa fa-search icon" style="color:#e44c4c;font-size:40px;cursor:pointer;" @click="searchPokemon"></i>
       </div>
     </div>
@@ -70,7 +76,7 @@ export default {
     return {
       masterList:[],
       dataList:[],
-      search:'',
+      criteria:{limit:'20'},
     }
   },
   methods:{
@@ -100,11 +106,15 @@ export default {
     clearData(){
        this.masterList = []
        this.dataList = []
-       this.search = ''
+       this.criteria = {limit:'20'}
     },
     async searchPokemon(){
 
-      this.masterList = await axios.get(`http://localhost:3030/api/cards?name=${this.search}`).then(resp => resp.data.cards.map(pokemon => {
+      let limit = this.criteria.limit || ''
+      let name = this.criteria.name || ''
+      let type = this.criteria.type || ''
+
+      this.masterList = await axios.get(`http://localhost:3030/api/cards?limit=${limit}&name=${name}&type=${type}`).then(resp => resp.data.cards.map(pokemon => {
           return this.getStatus(pokemon)
         }));
 
@@ -124,20 +134,6 @@ export default {
 
       this.dataList = this.masterList
 
-      if(this.search != ''){
-
-        let filterList = []
-
-        for(let i = 0; i < this.dataList.length; i++){
-            let pokemon = this.dataList[i]
-            if(pokemon.name.toUpperCase().indexOf(this.search.toUpperCase()) > -1){
-                filterList.push(pokemon)
-            }
-        }
-
-        this.dataList = filterList
-
-      }
     },
     closeModal(e){
       if(e.target.id === "myModal"){
@@ -298,10 +294,11 @@ export default {
   }
 
   .input-field {
-    width: 80%;
+    width: 25%;
     padding: 10px;
     outline: none;
     font-family:Gaegu;
+    margin: 5px;
   }
 
   .input-field:focus {
@@ -335,5 +332,7 @@ export default {
     display: block;
     width: 100%;
   }
+
+
 
 </style>
