@@ -143,14 +143,6 @@ export default {
     selectPokemon(pokemon){
       if(pokemon){
         this.$emit('addPokemon',pokemon)
-        for(let i = 0; i < this.masterList.length ; i++){
-          let p = this.masterList[i]
-          if(p.id.trim().toUpperCase() == pokemon.id.trim().toUpperCase()){
-            this.masterList.splice(i, 1);
-            break;
-          }
-        }
-        this.dataList = this.masterList
         this.searchPokemon()
       }
 
