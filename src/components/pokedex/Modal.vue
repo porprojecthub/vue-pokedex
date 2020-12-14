@@ -1,10 +1,8 @@
 <template>
 <div id="myModal" class="modal" ref="myModal" @click="closeModal($event)">
   <div class="modal-content">
-    <div class="container">
-  <div class="content">
     <div class="form-input">
-      <div class="input-container" style="padding-left:50px;">
+      <div class="input-container">
         <input class="input-field" style="font-size:20px;" type="text" v-model="criteria.name" placeholder="Pokemon Name"/>
         <input class="input-field" style="font-size:20px;" type="text" v-model="criteria.type" placeholder="Pokemon Type"/>
         <select class="input-field" v-model="criteria.limit" style="font-size:20px;">
@@ -15,6 +13,8 @@
         <i class="fa fa-search icon" style="color:#e44c4c;font-size:40px;cursor:pointer;" @click="searchPokemon"></i>
       </div>
     </div>
+    <div class="container">
+  <div class="content">
     <div class="cards" 
         v-for="pokemon in dataList" :key="pokemon.id" 
         @mouseover="pokemon.active = true"
@@ -110,13 +110,25 @@ export default {
     },
     async searchPokemon(){
 
-      let limit = this.criteria.limit || ''
-      let name = this.criteria.name || ''
-      let type = this.criteria.type || ''
+      let name = this.criteria.name || '';
+       let type = this.criteria.type || '';
+       let limit = this.criteria.limit || '';
 
-      this.masterList = await axios.get(`http://localhost:3030/api/cards?limit=${limit}&name=${name}&type=${type}`).then(resp => resp.data.cards.map(pokemon => {
-          return this.getStatus(pokemon)
-        }));
+       let params = new URLSearchParams();
+       
+        
+        if(name) params.append("name", name);
+        if(type) params.append("type", type);
+        if(limit) params.append("limit", limit);
+
+        let queryParams = {
+          params: params
+        };
+       
+ 
+        this.masterList = await axios.get(`http://localhost:3030/api/cards`,queryParams).then(resp => resp.data.cards.map(pokemon => {
+           return this.getStatus(pokemon);
+         }));
 
         if(this.selectedList.length){
           for(let i = 0; i < this.masterList.length; i++){
@@ -248,26 +260,43 @@ export default {
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 60%;
-  height:50%;
-  z-index: 10;
-  height: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-  border-radius: 10px;
-  left: 20%;
-  top: 20;
-  margin:0;
-  position: absolute;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    height:50%;
+    z-index: 10;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-radius: 10px;
+    left: 20%;
+    top: 20;
+    margin:0;
+    position: absolute;
 }
+
+.form-input{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    width: 100%;
+    overflow: auto;
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    padding: 20px 10px 0px 45px;
+    margin: 0;   
+    border:0;
+    z-index: 1;
+   }
+
  .content{
     position: relative;
     max-height: 100%;
-    top: 0px;
+    top: 60px;
     background-color: #ffffff;
   }
 
@@ -301,7 +330,7 @@ export default {
     display: inline-block;
     width: 90%;
     background-color: rgb(245, 243, 243);
-    margin: 20px 10px 20px 50px;
+    margin: 20px 10px 20px 42px;
     padding: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   }
